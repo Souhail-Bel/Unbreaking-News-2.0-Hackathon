@@ -1,0 +1,5 @@
+# Core server dependencies
+flask
+flask-cors
+requests
+Pillow
