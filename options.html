@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unbreaking News - Settings</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      color: #1e40af;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    
+    .header p {
+      color: #6b7280;
+      margin-top: 8px;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .card h2 {
+      font-size: 16px;
+      color: #374151;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .setting-row:last-child {
+      border-bottom: none;
+    }
+    
+    .setting-info h3 {
+      font-size: 14px;
+      color: #1f2937;
+      margin-bottom: 4px;
+    }
+    
+    .setting-info p {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    
+    /* Toggle Switch */
+    .toggle {
+      position: relative;
+      width: 48px;
+      height: 26px;
+    }
+    
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #e5e7eb;
+      transition: 0.3s;
+      border-radius: 26px;
+    }
+    
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .toggle input:checked + .toggle-slider {
+      background-color: #3b82f6;
+    }
+    
+    .toggle input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+    }
+    
+    /* Input Fields */
+    .input-group {
+      margin-bottom: 16px;
+    }
+    
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    
+    .input-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    
+    .input-group input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .input-group .hint {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 6px;
+    }
+    
+    /* Buttons */
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+    
+    .btn-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    
+    .btn-danger:hover {
+      background: #fecaca;
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    
+    /* Status Message */
+    .status {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-top: 16px;
+      display: none;
+    }
+    
+    .status.success {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+    
+    .status.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 32px;
+      color: #9ca3af;
+      font-size: 12px;
+    }
+    
+    .footer a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+    
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>
+        <span>🛡️</span>
+        Unbreaking News
+      </h1>
+      <p>Configure your verification experience</p>
+    </div>
+    
+    <!-- General Settings -->
+    <div class="card">
+      <h2>⚙️ General Settings</h2>
+      
+      <div class="setting-row">
+        <div class="setting-info">
+          <h3>Show Floating Button</h3>
+          <p>Display "Verify" button when text is selected</p>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="setting-floating-btn" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      
+      <div class="setting-row">
+        <div class="setting-info">
+          <h3>Auto-analyze on Selection</h3>
+          <p>Automatically start analysis when text is selected</p>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="setting-auto-analyze">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    
+    <!-- Privacy Settings -->
+    <div class="card">
+      <h2>🔒 Privacy Settings</h2>
+      
+      <div class="setting-row">
+        <div class="setting-info">
+          <h3>Privacy Mode</h3>
+          <p>Don't store full claim text in history (only scores)</p>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="setting-privacy-mode" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      
+      <div style="margin-top: 16px;">
+        <p style="font-size: 12px; color: #6b7280; line-height: 1.6;">
+          🔐 <strong>Your data stays local.</strong> All analysis is performed locally in your browser. 
+          Selected text is only sent to search engines when you click verification links.
+        </p>
+      </div>
+    </div>
+    
+    <!-- API Configuration -->
+    <div class="card">
+      <h2>🔑 API Configuration (Optional)</h2>
+      <p style="font-size: 13px; color: #6b7280; margin-bottom: 20px;">
+        Connect external fact-checking APIs for enhanced verification.
+      </p>
+      
+      <div class="input-group">
+        <label for="api-google-factcheck">Google Fact Check API Key</label>
+        <input type="password" id="api-google-factcheck" placeholder="Enter API key...">
+        <p class="hint">Get a key from Google Cloud Console</p>
+      </div>
+      
+      <div class="input-group">
+        <label for="api-claimbuster">ClaimBuster API Key</label>
+        <input type="password" id="api-claimbuster" placeholder="Enter API key...">
+        <p class="hint">Register at idir.uta.edu/claimbuster</p>
+      </div>
+    </div>
+    
+    <!-- Data Management -->
+    <div class="card">
+      <h2>📊 Data Management</h2>
+      
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btn-export">
+          📥 Export Data
+        </button>
+        <button class="btn btn-danger" id="btn-clear">
+          🗑️ Clear All Data
+        </button>
+      </div>
+      
+      <div id="status" class="status"></div>
+    </div>
+    
+    <!-- About -->
+    <div class="card">
+      <h2>ℹ️ About</h2>
+      <p style="font-size: 13px; color: #6b7280; line-height: 1.8;">
+        <strong>Unbreaking News v1.0.0</strong><br>
+        An open-source browser extension to combat misinformation using OSINT techniques.
+        Built for the Hackathon challenge to create tools that promote media literacy
+        and help users verify information before sharing.
+      </p>
+      <p style="font-size: 12px; color: #9ca3af; margin-top: 12px;">
+        This extension does not guarantee the accuracy of any claim. Always verify important
+        information with multiple trusted sources.
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>Made with ❤️ for truth and transparency</p>
+      <p style="margin-top: 8px;">
+        <a href="https://github.com/unbreaking-news" target="_blank">GitHub</a> • 
+        <a href="#" id="link-feedback">Send Feedback</a>
+      </p>
+    </div>
+  </div>
+  
+  <script src="options.js"></script>
+</body>
+</html>+
