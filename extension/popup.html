@@ -1,41 +1,515 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unbreaking News</title>
   <style>
-    body { width: 320px; padding: 0; margin: 0; font-family: 'Segoe UI', sans-serif; background: #f9f9f9; }
-    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; color: white; }
-    h3 { margin: 0; display: flex; align-items: center; gap: 8px; }
-    .content { padding: 20px; }
-    textarea {
-      width: 100%; height: 100px; padding: 12px; border: 1px solid #e0e0e0;
-      border-radius: 8px; resize: none; font-family: inherit; box-sizing: border-box;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    button {
-      width: 100%; padding: 12px; background: #111; color: white; border: none;
-      border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 600;
+    
+    body {
+      width: 400px;
+      min-height: 300px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8fafc;
+      color: #1f2937;
     }
-    button:hover { background: #333; }
-    #res { margin-top: 15px; font-size: 14px; line-height: 1.5; color: #444; }
-    .links { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; text-align: center; font-size: 12px; }
-    a { color: #667eea; text-decoration: none; cursor: pointer; margin: 0 5px; }
+    
+    .header {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      padding: 20px;
+      color: white;
+    }
+    
+    .header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .header p {
+      font-size: 12px;
+      opacity: 0.9;
+      margin-top: 6px;
+    }
+    
+    .tabs {
+      display: flex;
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6b7280;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    
+    .tab:hover {
+      color: #3b82f6;
+      background: #f0f9ff;
+    }
+    
+    .tab.active {
+      color: #3b82f6;
+      border-bottom-color: #3b82f6;
+    }
+    
+    .content {
+      padding: 16px;
+    }
+    
+    .section {
+      display: none;
+    }
+    
+    .section.active {
+      display: block;
+    }
+    
+    /* Current Claim Section */
+    .no-claim {
+      text-align: center;
+      padding: 40px 20px;
+      color: #6b7280;
+    }
+    
+    .no-claim-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+    
+    .no-claim h3 {
+      font-size: 16px;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    
+    .no-claim p {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    
+    .claim-card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .score-ring {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    
+    .score-inner {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .recommendation {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    
+    .recommendation-level {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .recommendation-message {
+      font-size: 13px;
+      color: #4b5563;
+      margin-top: 4px;
+    }
+    
+    .claim-text {
+      background: #f9fafb;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    
+    .claim-domain {
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+    
+    .links-section {
+      margin-top: 16px;
+    }
+    
+    .links-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    
+    .link-btn {
+      display: block;
+      padding: 10px 12px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #166534;
+      font-size: 12px;
+      margin-bottom: 6px;
+      transition: background 0.15s;
+    }
+    
+    .link-btn:hover {
+      background: #dcfce7;
+    }
+    
+    /* History Section */
+    .history-item {
+      background: white;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .history-domain {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    
+    .history-score {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 12px;
+    }
+    
+    .history-score.credible {
+      background: #dcfce7;
+      color: #166534;
+    }
+    
+    .history-score.uncertain {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    
+    .history-score.suspicious {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    
+    .history-time {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 30px;
+      color: #6b7280;
+    }
+    
+    .btn-clear {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: #fee2e2;
+      border: none;
+      border-radius: 8px;
+      color: #991b1b;
+      font-size: 13px;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+    
+    .btn-clear:hover {
+      background: #fecaca;
+    }
+    
+    /* Stats Section */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .stat-card {
+      background: white;
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #3b82f6;
+    }
+    
+    .stat-label {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    
+    .feedback-summary {
+      background: white;
+      border-radius: 10px;
+      padding: 16px;
+    }
+    
+    .feedback-bar {
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+    
+    .feedback-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+    
+    .feedback-legend {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #6b7280;
+    }
+    
+    .settings-link {
+      display: block;
+      text-align: center;
+      padding: 12px;
+      color: #3b82f6;
+      text-decoration: none;
+      font-size: 13px;
+      margin-top: 16px;
+    }
+    
+    .settings-link:hover {
+      text-decoration: underline;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+    }
+    
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #e5e7eb;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Tools Section */
+    .tools-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .tool-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: white;
+      border-radius: 10px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      transition: all 0.2s;
+    }
+    
+    .tool-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    
+    .tool-icon {
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0f9ff;
+      border-radius: 10px;
+    }
+    
+    .tool-info {
+      flex: 1;
+    }
+    
+    .tool-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0 0 2px 0;
+    }
+    
+    .tool-info p {
+      font-size: 12px;
+      color: #6b7280;
+      margin: 0;
+    }
+    
+    .tool-arrow {
+      color: #9ca3af;
+      font-size: 18px;
+    }
   </style>
 </head>
 <body>
   <div class="header">
-    <h3>🛡️ Unbreaking News</h3>
-    <div style="font-size:12px; opacity:0.8; margin-top:5px;">Glass Edition v6.1</div>
+    <h1>
+      <span>🛡️</span>
+      Unbreaking News
+    </h1>
+    <p>Combat misinformation with OSINT verification</p>
   </div>
+  
+  <div class="tabs">
+    <div class="tab active" data-tab="current">Current</div>
+    <div class="tab" data-tab="history">History</div>
+    <div class="tab" data-tab="stats">Stats</div>
+    <div class="tab" data-tab="tools">Tools</div>
+  </div>
+  
   <div class="content">
-    <textarea id="inp" placeholder="Paste suspicious text here..."></textarea>
-    <button id="btn">Analyze Text</button>
-    <div id="res"></div>
-
-    <div class="links">
-      <a id="openOptions">⚙️ Settings</a> •
-      <a id="openForensics">🕵️ Forensics Lab</a>
+    <!-- Current Claim Section -->
+    <div id="section-current" class="section active">
+      <div id="current-content">
+        <div class="no-claim">
+          <div class="no-claim-icon">🔍</div>
+          <h3>No claim selected</h3>
+          <p>Select text on any webpage and click the "Verify" button to analyze a claim.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- History Section -->
+    <div id="section-history" class="section">
+      <div id="history-content">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading history...</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Stats Section -->
+    <div id="section-stats" class="section">
+      <div id="stats-content">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading stats...</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tools Section -->
+    <div id="section-tools" class="section">
+      <div class="tools-list">
+        <a href="#" id="open-forensics" class="tool-card">
+          <div class="tool-icon">🔬</div>
+          <div class="tool-info">
+            <h4>Forensics Lab</h4>
+            <p>Analyze images for manipulation</p>
+          </div>
+          <span class="tool-arrow">→</span>
+        </a>
+        
+        <a href="https://images.google.com/" target="_blank" class="tool-card">
+          <div class="tool-icon">🔍</div>
+          <div class="tool-info">
+            <h4>Reverse Image Search</h4>
+            <p>Find image origins on Google</p>
+          </div>
+          <span class="tool-arrow">→</span>
+        </a>
+        
+        <a href="https://www.tineye.com/" target="_blank" class="tool-card">
+          <div class="tool-icon">👁️</div>
+          <div class="tool-info">
+            <h4>TinEye</h4>
+            <p>Track image usage across web</p>
+          </div>
+          <span class="tool-arrow">→</span>
+        </a>
+        
+        <a href="https://fotoforensics.com/" target="_blank" class="tool-card">
+          <div class="tool-icon">📷</div>
+          <div class="tool-info">
+            <h4>FotoForensics</h4>
+            <p>External ELA analysis tool</p>
+          </div>
+          <span class="tool-arrow">→</span>
+        </a>
+        
+        <a href="https://web.archive.org/" target="_blank" class="tool-card">
+          <div class="tool-icon">🏛️</div>
+          <div class="tool-info">
+            <h4>Wayback Machine</h4>
+            <p>View archived web pages</p>
+          </div>
+          <span class="tool-arrow">→</span>
+        </a>
+      </div>
     </div>
   </div>
+  
   <script src="popup.js"></script>
 </body>
 </html>

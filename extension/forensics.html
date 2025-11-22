@@ -1,43 +1,248 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Forensics Lab</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    body { background: #111; color: #eee; margin: 0; display: flex; height: 100vh; overflow: hidden; font-family: sans-serif; }
-    .sidebar { width: 260px; background: #1a1a1a; padding: 20px; display: flex; flex-direction: column; gap: 10px; border-right: 1px solid #333; }
-    .main { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; background-image: radial-gradient(#333 1px, transparent 1px); background-size: 20px 20px; }
-    canvas { max-width: 90%; box-shadow: 0 0 50px rgba(0,0,0,0.5); border: 1px solid #444; }
-    .btn { background: #333; color: #ccc; border: 1px solid #444; padding: 12px; text-align: left; cursor: pointer; border-radius: 6px; transition: 0.2s; }
-    .btn:hover, .btn.active { background: #007bff; color: white; border-color: #0056b3; }
-    .meta-panel { background: #000; padding: 10px; font-family: monospace; font-size: 11px; color: #0f0; margin-top: auto; border: 1px solid #333; height: 150px; overflow: auto; }
-    #magnifier { position: absolute; width: 120px; height: 120px; border: 2px solid #007bff; border-radius: 50%; pointer-events: none; display: none; z-index: 100; background-color: black; }
-    input[type=range] { width: 100%; margin: 10px 0; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔬 Forensics Lab - Unbreaking News</title>
+  <link rel="stylesheet" href="forensics.css">
 </head>
 <body>
-  <div class="sidebar">
-    <h3 style="color:#007bff; margin-top:0;">👁️ FORENSICS</h3>
-    <button id="mode-normal" class="btn active">Original</button>
-    <button id="mode-ela" class="btn">ELA (Error Level)</button>
-    <button id="mode-noise" class="btn">Noise Analysis</button>
-    <button id="mode-mag" class="btn">Magnifier</button>
-
-    <div id="controls-ela" style="display:none; padding:10px; background:#222; margin-top:5px;">
-        <label style="font-size:12px;">Amplification</label>
-        <input type="range" id="ela-scale" min="10" max="100" value="40">
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <h1>🔬 Forensics Lab</h1>
+        <span class="subtitle">Image Authentication & Analysis</span>
+      </div>
+      <div class="header-right">
+        <button id="btn-upload" class="btn btn-primary">
+          📁 Upload New Image
+        </button>
+        <button id="btn-reverse-search" class="btn btn-secondary">
+          🔍 Reverse Image Search
+        </button>
+      </div>
+    </header>
+    
+    <!-- Main Layout -->
+    <div class="main-layout">
+      <!-- Sidebar Tools -->
+      <aside class="sidebar">
+        <div class="tool-section">
+          <h3>🛠️ Analysis Tools</h3>
+          
+          <button class="tool-btn active" data-tool="original">
+            <span class="tool-icon">🖼️</span>
+            <span class="tool-name">Original</span>
+          </button>
+          
+          <button class="tool-btn" data-tool="magnifier">
+            <span class="tool-icon">🔍</span>
+            <span class="tool-name">Magnifier</span>
+          </button>
+          
+          <button class="tool-btn" data-tool="ela">
+            <span class="tool-icon">⚡</span>
+            <span class="tool-name">Error Level Analysis</span>
+          </button>
+          
+          <button class="tool-btn" data-tool="noise">
+            <span class="tool-icon">📊</span>
+            <span class="tool-name">Noise Analysis</span>
+          </button>
+          
+          <button class="tool-btn" data-tool="edges">
+            <span class="tool-icon">🔲</span>
+            <span class="tool-name">Edge Detection</span>
+          </button>
+          
+          <button class="tool-btn" data-tool="levels">
+            <span class="tool-icon">📈</span>
+            <span class="tool-name">Level Sweep</span>
+          </button>
+          
+          <button class="tool-btn" data-tool="luminance">
+            <span class="tool-icon">☀️</span>
+            <span class="tool-name">Luminance Gradient</span>
+          </button>
+          
+          <button class="tool-btn" data-tool="clone">
+            <span class="tool-icon">🔄</span>
+            <span class="tool-name">Clone Detection</span>
+          </button>
+          
+          <button class="tool-btn" data-tool="histogram">
+            <span class="tool-icon">📉</span>
+            <span class="tool-name">Histogram</span>
+          </button>
+        </div>
+        
+        <div class="tool-section">
+          <h3>📋 Metadata</h3>
+          
+          <button class="tool-btn" data-tool="metadata">
+            <span class="tool-icon">ℹ️</span>
+            <span class="tool-name">EXIF Data</span>
+          </button>
+          
+          <button class="tool-btn" data-tool="jpeg">
+            <span class="tool-icon">🗜️</span>
+            <span class="tool-name">JPEG Analysis</span>
+          </button>
+          
+          <button class="tool-btn" data-tool="strings">
+            <span class="tool-icon">📝</span>
+            <span class="tool-name">String Extraction</span>
+          </button>
+        </div>
+        
+        <div class="tool-section">
+          <h3>🎨 Enhancements</h3>
+          
+          <button class="tool-btn" data-tool="contrast">
+            <span class="tool-icon">◐</span>
+            <span class="tool-name">Auto Contrast</span>
+          </button>
+          
+          <button class="tool-btn" data-tool="sharpen">
+            <span class="tool-icon">🔪</span>
+            <span class="tool-name">Sharpen</span>
+          </button>
+          
+          <button class="tool-btn" data-tool="channels">
+            <span class="tool-icon">🌈</span>
+            <span class="tool-name">Color Channels</span>
+          </button>
+        </div>
+      </aside>
+      
+      <!-- Main Canvas Area -->
+      <main class="canvas-area">
+        <!-- Drop Zone (shown when no image) -->
+        <div id="drop-zone" class="drop-zone">
+          <div class="drop-content">
+            <span class="drop-icon">📷</span>
+            <h2>Drop an image here</h2>
+            <p>or click to upload</p>
+            <p class="drop-hint">Supports: JPEG, PNG, WebP, GIF, BMP</p>
+          </div>
+          <input type="file" id="file-input" accept="image/*" hidden>
+        </div>
+        
+        <!-- Canvas Container (shown when image loaded) -->
+        <div id="canvas-container" class="canvas-container hidden">
+          <canvas id="main-canvas"></canvas>
+          
+          
+          <!-- Magnifier Lens -->
+          <div id="magnifier-lens" class="magnifier-lens hidden"></div>
+        </div>
+        
+        <!-- Tool Controls -->
+        <div id="tool-controls" class="tool-controls hidden">
+          <!-- ELA Controls -->
+          <div id="ela-controls" class="control-panel hidden">
+            <label>
+              Quality Level: <span id="ela-quality-value">90</span>%
+              <input type="range" id="ela-quality" min="50" max="99" value="90">
+            </label>
+            <label>
+              Enhancement: <span id="ela-enhance-value">10</span>x
+              <input type="range" id="ela-enhance" min="1" max="30" value="10">
+            </label>
+          </div>
+          
+          <!-- Magnifier Controls -->
+          <div id="magnifier-controls" class="control-panel hidden">
+            <label>
+              Zoom: <span id="mag-zoom-value">4</span>x
+              <input type="range" id="mag-zoom" min="2" max="16" value="4">
+            </label>
+            <label>
+              Lens Size: <span id="mag-size-value">150</span>px
+              <input type="range" id="mag-size" min="50" max="300" value="150">
+            </label>
+          </div>
+          
+          <!-- Noise Controls -->
+          <div id="noise-controls" class="control-panel hidden">
+            <label>
+              Sensitivity: <span id="noise-sens-value">20</span>
+              <input type="range" id="noise-sens" min="1" max="50" value="20">
+            </label>
+          </div>
+          
+          <!-- Level Sweep Controls -->
+          <div id="levels-controls" class="control-panel hidden">
+            <label>
+              Level: <span id="level-value">128</span>
+              <input type="range" id="level-sweep" min="0" max="255" value="128">
+            </label>
+            <label>
+              Window: <span id="level-window-value">10</span>
+              <input type="range" id="level-window" min="1" max="50" value="10">
+            </label>
+          </div>
+          
+          <!-- Channel Controls -->
+          <div id="channel-controls" class="control-panel hidden">
+            <button class="channel-btn active" data-channel="rgb">RGB</button>
+            <button class="channel-btn" data-channel="red">Red</button>
+            <button class="channel-btn" data-channel="green">Green</button>
+            <button class="channel-btn" data-channel="blue">Blue</button>
+          </div>
+        </div>
+      </main>
+      
+      <!-- Info Panel -->
+      <aside class="info-panel">
+        <div id="image-info" class="info-section">
+          <h3>📊 Image Info</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Dimensions</span>
+              <span id="info-dimensions" class="info-value">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">File Size</span>
+              <span id="info-filesize" class="info-value">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Format</span>
+              <span id="info-format" class="info-value">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Color Depth</span>
+              <span id="info-depth" class="info-value">-</span>
+            </div>
+          </div>
+        </div>
+        
+        <div id="analysis-results" class="info-section">
+          <h3>🔍 Analysis Results</h3>
+          <div id="results-content" class="results-content">
+            <p class="placeholder-text">Select a tool to begin analysis</p>
+          </div>
+        </div>
+        
+        <div id="metadata-panel" class="info-section hidden">
+          <h3>📋 EXIF Metadata</h3>
+          <div id="metadata-content" class="metadata-content">
+            <p class="placeholder-text">No metadata found</p>
+          </div>
+        </div>
+        
+        <div class="info-section">
+          <h3>⚠️ Disclaimer</h3>
+          <p class="disclaimer-text">
+            These tools aid in identifying potential image manipulation but cannot 
+            definitively prove authenticity. Always combine with other verification methods.
+          </p>
+        </div>
+      </aside>
     </div>
-
-    <div class="meta-panel" id="meta-display">Metadata Reader Initializing...</div>
   </div>
-
-  <div class="main">
-    <div id="magnifier"></div>
-    <div id="loader" style="color:white;">Loading Secure Image...</div>
-    <canvas id="stage"></canvas>
-  </div>
-
+  
   <script src="forensics.js"></script>
 </body>
 </html>
