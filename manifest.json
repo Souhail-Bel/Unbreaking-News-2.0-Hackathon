@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Unbreaking News",
-  "version": "1.0.0",
-  "description": "Combat misinformation by verifying claims with OSINT techniques",
+  "version": "1.1.0",
+  "description": "Combat misinformation by verifying claims with OSINT techniques and image forensics",
   "author": "Unbreaking News Team",
   
   "permissions": [
@@ -51,7 +51,7 @@
   
   "web_accessible_resources": [
     {
-      "resources": ["icons/*"],
+      "resources": ["icons/*", "forensics.html", "forensics.js", "forensics.css"],
       "matches": ["<all_urls>"]
     }
   ]

@@ -11,6 +11,12 @@ async function init() {
     tab.addEventListener('click', () => switchTab(tab.dataset.tab));
   });
   
+  // Set up forensics lab link
+  document.getElementById('open-forensics')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    chrome.tabs.create({ url: chrome.runtime.getURL('forensics.html') });
+  });
+  
   // Load current claim data
   await loadCurrentClaim();
 }

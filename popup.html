@@ -351,6 +351,64 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+    
+    /* Tools Section */
+    .tools-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .tool-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: white;
+      border-radius: 10px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      transition: all 0.2s;
+    }
+    
+    .tool-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    
+    .tool-icon {
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0f9ff;
+      border-radius: 10px;
+    }
+    
+    .tool-info {
+      flex: 1;
+    }
+    
+    .tool-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0 0 2px 0;
+    }
+    
+    .tool-info p {
+      font-size: 12px;
+      color: #6b7280;
+      margin: 0;
+    }
+    
+    .tool-arrow {
+      color: #9ca3af;
+      font-size: 18px;
+    }
   </style>
 </head>
 <body>
@@ -366,6 +424,7 @@
     <div class="tab active" data-tab="current">Current</div>
     <div class="tab" data-tab="history">History</div>
     <div class="tab" data-tab="stats">Stats</div>
+    <div class="tab" data-tab="tools">Tools</div>
   </div>
   
   <div class="content">
@@ -397,6 +456,56 @@
           <div class="spinner"></div>
           <p>Loading stats...</p>
         </div>
+      </div>
+    </div>
+    
+    <!-- Tools Section -->
+    <div id="section-tools" class="section">
+      <div class="tools-list">
+        <a href="#" id="open-forensics" class="tool-card">
+          <div class="tool-icon">🔬</div>
+          <div class="tool-info">
+            <h4>Forensics Lab</h4>
+            <p>Analyze images for manipulation</p>
+          </div>
+          <span class="tool-arrow">→</span>
+        </a>
+        
+        <a href="https://images.google.com/" target="_blank" class="tool-card">
+          <div class="tool-icon">🔍</div>
+          <div class="tool-info">
+            <h4>Reverse Image Search</h4>
+            <p>Find image origins on Google</p>
+          </div>
+          <span class="tool-arrow">→</span>
+        </a>
+        
+        <a href="https://www.tineye.com/" target="_blank" class="tool-card">
+          <div class="tool-icon">👁️</div>
+          <div class="tool-info">
+            <h4>TinEye</h4>
+            <p>Track image usage across web</p>
+          </div>
+          <span class="tool-arrow">→</span>
+        </a>
+        
+        <a href="https://fotoforensics.com/" target="_blank" class="tool-card">
+          <div class="tool-icon">📷</div>
+          <div class="tool-info">
+            <h4>FotoForensics</h4>
+            <p>External ELA analysis tool</p>
+          </div>
+          <span class="tool-arrow">→</span>
+        </a>
+        
+        <a href="https://web.archive.org/" target="_blank" class="tool-card">
+          <div class="tool-icon">🏛️</div>
+          <div class="tool-info">
+            <h4>Wayback Machine</h4>
+            <p>View archived web pages</p>
+          </div>
+          <span class="tool-arrow">→</span>
+        </a>
       </div>
     </div>
   </div>
