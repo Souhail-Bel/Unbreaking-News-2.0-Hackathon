@@ -208,12 +208,19 @@
   function displayResults(data) {
     hideFloatingButton();
     
-    const { scores, claim, flags, evidenceLinks, recommendation, domain } = data;
+    const { scores, claim, flags, evidenceLinks, recommendation, domain, factCheck, verification } = data;
     const score = scores.overall;
+    
+    // Determine if this is a fact-checked claim
+    const isFactChecked = factCheck && factCheck.matched;
+    const isFalse = isFactChecked && !factCheck.isTrue;
+    const isVerifiedTrue = isFactChecked && factCheck.isTrue;
     
     resultsPanel.innerHTML = `
       <div class="ubn-header" style="
-        background: linear-gradient(135deg, ${recommendation.color}22, ${recommendation.color}11);
+        background: ${isFalse ? 'linear-gradient(135deg, #dc262622, #dc262611)' : 
+                      isVerifiedTrue ? 'linear-gradient(135deg, #16a34a22, #16a34a11)' :
+                      `linear-gradient(135deg, ${recommendation.color}22, ${recommendation.color}11)`};
         padding: 20px;
         border-bottom: 1px solid ${recommendation.color}33;
       ">
@@ -221,7 +228,9 @@
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 24px;">${recommendation.icon}</span>
             <div>
-              <h3 style="margin: 0; font-size: 16px; color: #1f2937;">Credibility Check</h3>
+              <h3 style="margin: 0; font-size: 16px; color: #1f2937;">
+                ${isFactChecked ? 'Fact Check Result' : 'Credibility Check'}
+              </h3>
               <span style="font-size: 12px; color: #6b7280;">${domain}</span>
             </div>
           </div>
@@ -235,38 +244,68 @@
           ">×</button>
         </div>
         
-        <div style="margin-top: 16px; display: flex; align-items: center; gap: 16px;">
+        ${isFactChecked ? `
           <div style="
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: conic-gradient(${recommendation.color} ${score}%, #e5e7eb ${score}%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin-top: 16px;
+            padding: 16px;
+            background: ${isFalse ? '#fef2f2' : '#f0fdf4'};
+            border: 2px solid ${isFalse ? '#dc2626' : '#16a34a'};
+            border-radius: 12px;
           ">
             <div style="
-              width: 56px;
-              height: 56px;
+              font-size: 18px;
+              font-weight: 700;
+              color: ${isFalse ? '#dc2626' : '#16a34a'};
+              margin-bottom: 8px;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+            ">
+              ${isFalse ? '❌ FALSE CLAIM' : '✅ VERIFIED TRUE'}
+            </div>
+            <p style="margin: 0; font-size: 14px; color: #374151; line-height: 1.5;">
+              ${factCheck.fact}
+            </p>
+            ${factCheck.correction ? `
+              <p style="margin: 10px 0 0; font-size: 13px; color: #059669; font-weight: 500;">
+                ✓ ${factCheck.correction}
+              </p>
+            ` : ''}
+          </div>
+        ` : `
+          <div style="margin-top: 16px; display: flex; align-items: center; gap: 16px;">
+            <div style="
+              width: 70px;
+              height: 70px;
               border-radius: 50%;
-              background: white;
+              background: conic-gradient(${recommendation.color} ${score}%, #e5e7eb ${score}%);
               display: flex;
               align-items: center;
               justify-content: center;
-              font-size: 20px;
-              font-weight: 700;
-              color: ${recommendation.color};
-            ">${score}</div>
-          </div>
-          <div style="flex: 1;">
-            <div style="font-weight: 600; color: ${recommendation.color}; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
-              ${recommendation.level}
+            ">
+              <div style="
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                background: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                font-weight: 700;
+                color: ${recommendation.color};
+              ">${score}</div>
             </div>
-            <p style="margin: 4px 0 0; font-size: 13px; color: #4b5563; line-height: 1.4;">
-              ${recommendation.message}
-            </p>
+            <div style="flex: 1;">
+              <div style="font-weight: 600; color: ${recommendation.color}; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+                ${recommendation.level}
+              </div>
+              <p style="margin: 4px 0 0; font-size: 13px; color: #4b5563; line-height: 1.4;">
+                ${recommendation.message}
+              </p>
+            </div>
           </div>
-        </div>
+        `}
       </div>
       
       <div style="padding: 16px; overflow-y: auto; max-height: calc(80vh - 200px);">
@@ -277,32 +316,61 @@
           margin-bottom: 16px;
         ">
           <div style="font-size: 11px; color: #6b7280; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
-            Selected Claim
+            Claim Analyzed
           </div>
           <p style="margin: 0; font-size: 13px; color: #374151; line-height: 1.5;">
             "${claim.length > 200 ? claim.substring(0, 200) + '...' : claim}"
           </p>
         </div>
         
-        ${flags.length > 0 ? `
+        ${!isFactChecked ? `
+          <div style="
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+          ">
+            <div style="font-size: 12px; color: #92400e; display: flex; align-items: center; gap: 6px;">
+              <span>⚠️</span>
+              <strong>Unverified Claim</strong>
+            </div>
+            <p style="margin: 6px 0 0; font-size: 12px; color: #78350f;">
+              This claim couldn't be automatically fact-checked. Please verify using the links below.
+            </p>
+          </div>
+        ` : ''}
+        
+        ${flags && flags.length > 0 ? `
           <div style="margin-bottom: 16px;">
             <div style="font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 8px;">
-              Analysis Flags
+              Analysis Details
             </div>
             ${flags.map(flag => `
               <div style="
                 display: flex;
-                align-items: center;
+                align-items: flex-start;
                 gap: 8px;
                 padding: 8px 10px;
-                background: ${flag.severity === 'positive' ? '#dcfce7' : flag.severity === 'high' ? '#fee2e2' : '#fef3c7'};
+                background: ${flag.severity === 'positive' ? '#dcfce7' : 
+                             flag.severity === 'critical' ? '#fee2e2' : 
+                             flag.severity === 'high' ? '#fee2e2' : 
+                             flag.severity === 'info' ? '#e0f2fe' : '#fef3c7'};
                 border-radius: 6px;
                 margin-bottom: 6px;
                 font-size: 12px;
-                color: ${flag.severity === 'positive' ? '#166534' : flag.severity === 'high' ? '#991b1b' : '#92400e'};
+                color: ${flag.severity === 'positive' ? '#166534' : 
+                        flag.severity === 'critical' ? '#991b1b' : 
+                        flag.severity === 'high' ? '#991b1b' : 
+                        flag.severity === 'info' ? '#0369a1' : '#92400e'};
               ">
-                <span>${flag.severity === 'positive' ? '✓' : flag.severity === 'high' ? '⚠' : '○'}</span>
-                <span>${flag.message}</span>
+                <span style="flex-shrink: 0;">${
+                  flag.severity === 'positive' ? '✓' : 
+                  flag.severity === 'critical' ? '✗' : 
+                  flag.severity === 'info' ? 'ℹ' :
+                  flag.severity === 'high' ? '⚠' : '○'
+                }</span>
+                <span style="line-height: 1.4;">${flag.message}</span>
               </div>
             `).join('')}
           </div>
@@ -310,7 +378,33 @@
         
         <div style="margin-bottom: 16px;">
           <div style="font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 8px;">
-            Verify with Search Engines
+            🔎 Verify This Claim
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            ${evidenceLinks.factCheckers.slice(0, 3).map(fc => `
+              <a href="${fc.url}" target="_blank" rel="noopener" style="
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 12px;
+                background: #f0fdf4;
+                border: 1px solid #bbf7d0;
+                border-radius: 6px;
+                text-decoration: none;
+                color: #166534;
+                font-size: 13px;
+                transition: background 0.15s;
+              " onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'">
+                ✓ ${fc.name}
+                <span style="margin-left: auto; font-size: 11px; color: #6b7280;">→</span>
+              </a>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 16px;">
+          <div style="font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 8px;">
+            🌐 Search Engines
           </div>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             ${evidenceLinks.searchEngines.map(engine => `
@@ -332,39 +426,13 @@
           </div>
         </div>
         
-        <div style="margin-bottom: 16px;">
-          <div style="font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 8px;">
-            Check Fact-Checkers
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            ${evidenceLinks.factCheckers.map(fc => `
-              <a href="${fc.url}" target="_blank" rel="noopener" style="
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                padding: 10px 12px;
-                background: #f0fdf4;
-                border: 1px solid #bbf7d0;
-                border-radius: 6px;
-                text-decoration: none;
-                color: #166534;
-                font-size: 13px;
-                transition: background 0.15s;
-              " onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'">
-                ✓ ${fc.name}
-                <span style="margin-left: auto; font-size: 11px; color: #6b7280;">→</span>
-              </a>
-            `).join('')}
-          </div>
-        </div>
-        
         <div style="
           border-top: 1px solid #e5e7eb;
           padding-top: 16px;
           margin-top: 16px;
         ">
           <div style="font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 10px;">
-            Was this helpful?
+            Was this analysis helpful?
           </div>
           <div style="display: flex; gap: 10px;">
             <button class="ubn-feedback-btn" data-feedback="true" style="
@@ -377,7 +445,7 @@
               font-size: 13px;
               color: #166534;
               transition: background 0.15s;
-            ">✓ Mark as True</button>
+            ">👍 Helpful</button>
             <button class="ubn-feedback-btn" data-feedback="false" style="
               flex: 1;
               padding: 10px;
@@ -388,7 +456,7 @@
               font-size: 13px;
               color: #991b1b;
               transition: background 0.15s;
-            ">✗ Mark as False</button>
+            ">👎 Not Helpful</button>
           </div>
         </div>
       </div>
