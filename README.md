@@ -20,7 +20,7 @@ This utility combines text-based heuristic analysis and a client-side image fore
 5. [Technology Choices](#-technology-choices)
 6. [Technical Architecture](#-technical-architecture)
 7. [Pipelining and Data Flow](#-pipelining-and-data-flow)
-99. [The Future of this Project](#-the-future-of-this-project)
+99. [The Future of this Project](#%EF%B8%8F-the-future-of-this-project)
 
 
 ## 💡 Core Concept
