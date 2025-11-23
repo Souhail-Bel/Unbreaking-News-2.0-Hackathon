@@ -46,10 +46,10 @@ Select a text on a website, now either:
 
 You can later check the stats or history (and even download the reports!)
 #### Forensics Lab
-Click on the extension icon in the toolbar
-Now, select `Tools` and then `Forensics Lab`
-This will take you to a website where you can either click and choose an image or drag and drop
-The tool are displayed by the image and the metadata on the opposite end.
+Click on the extension icon in the toolbar.\
+Now, select `Tools` and then `Forensics Lab`.\
+This will take you to a website where you can either click and choose an image or drag and drop.\
+The tool are displayed by the image and the metadata on the opposite end.\
 
 ## 📂 Project Structure
 ```
