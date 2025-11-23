@@ -69,10 +69,10 @@ The user has the option to extract the results of their investigations via the O
 The options page also allows the user to enter their API key for their <i>ClaimBuster</i> (appears to be deprecated) and <i>Google Fact Check</i>, though that's currently unused.
 ## ⚙️ Technology Choices
 Our choices were driven by prioritizing <b>compatibility</b>, <b>performance</b>, <b>security</b> and most importantly <b>privacy</b>.
-* <b>Chrome Extension (Manifest V3)[https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3]:</b> The latest standard for browser extensions was adopted to ensure upward compatibility and robust security.\
+* <b>Chrome Extension [Manifest V3](https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3):</b> The latest standard for browser extensions was adopted to ensure upward compatibility and robust security.\
 The memory overhead is reduced while idle by having `background.js` as a service worker instead of using a persistent background page.
 
-* <b>Vanilla Javascript ((ES6)[https://262.ecma-international.org/6.0/]+):</b> No heavy frameworks are needed for our objectives, it is lightweight and readability is ensured.\
+* <b>Vanilla Javascript ([ES6](https://262.ecma-international.org/6.0/)+):</b> No heavy frameworks are needed for our objectives, it is lightweight and readability is ensured.\
 DOM manipulation, essential for `content_script.js`, is done seamlessly without style conflicts.
 
 * <b>HTML5 [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API):</b> Useful for image processing done by `forensics.js` on the client side to read ImageData and apply the respective mathematical transformations (ELA, Edge Detection...).
