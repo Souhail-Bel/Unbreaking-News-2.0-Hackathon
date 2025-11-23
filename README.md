@@ -1,4 +1,8 @@
 # 🛡️ Veritas, Let No Lie Pass
+`by Team: El Tabassi de Novo`
+
+`Souhail Ben Belhassen, Semah Soudani, Mohamed Yassine Ben Slama`
+
 <div align="center">
   <img src="extension/icons/icon128.png" width="100" alt="Extension Icon">
 </div>
